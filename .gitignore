@@ -1,3 +1,6 @@
+# mysql config
+application-mysql.properties
+
 # Compiled class file
 *.class
 
