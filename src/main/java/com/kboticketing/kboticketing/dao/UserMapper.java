@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface UserMapper {
 
-    void insertUser(User user);
+    void insert(User user);
 
-    User selectUserByEmail(String email);
+    User selectByEmail(String email);
 }

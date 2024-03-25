@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.kboticketing.kboticketing.dao.UserMapper">
-    <insert id="insertUser" parameterType="com.kboticketing.kboticketing.domain.User">
-        INSERT INTO users (name, `email`, password, role, created_at)
-        VALUES (#{name}, #{email}, #{password}, #{role}, #{createdAt})
-    </insert>
+  <insert id="insert" parameterType="com.kboticketing.kboticketing.domain.User">
+    INSERT INTO users (name, `email`, password, role, created_at)
+    VALUES (#{name}, #{email}, #{password}, #{role}, #{createdAt})
+  </insert>
 
-    <select id="selectUserByEmail" resultType="com.kboticketing.kboticketing.domain.User">
-        SELECT name, email, password, role, created_at
-        FROM users
-        WHERE email = #{email}
-    </select>
+  <select id="selectByEmail" resultType="com.kboticketing.kboticketing.domain.User">
+    SELECT name, email, password, role, created_at
+    FROM users
+    WHERE email = #{email}
+  </select>
 
 </mapper>

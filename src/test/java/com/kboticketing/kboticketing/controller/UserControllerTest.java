@@ -45,7 +45,7 @@ public class UserControllerTest {
             .signUp(any());
 
         //when, then
-        mockMvc.perform(post("/signup")
+        mockMvc.perform(post("/users")
                    .content(json)
                    .contentType(MediaType.APPLICATION_JSON))
                .andExpect(status().isBadRequest());
@@ -60,9 +60,25 @@ public class UserControllerTest {
         String json = new ObjectMapper().writeValueAsString(userDto);
 
         //when, then
-        mockMvc.perform(post("/signup")
+        mockMvc.perform(post("/users")
                    .content(json)
                    .contentType(MediaType.APPLICATION_JSON))
                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("[SUCCESS] 회원가입 성공 테스트")
+    void signUpSuccessTest() throws Exception {
+
+        //given
+        UserDto userDto = new UserDto("공유", "abcde@naver.com", "123123", "Pa$$w0rd!", "Pa$$w0rd!");
+        String json = new ObjectMapper().writeValueAsString(userDto);
+
+        //when,then
+        mockMvc.perform(post("/users")
+                   .content(json)
+                   .contentType(MediaType.APPLICATION_JSON))
+               .andExpect(status().isOk());
+
     }
 }
