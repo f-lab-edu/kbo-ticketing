@@ -38,7 +38,7 @@ class UserServiceTest {
 
         // given
         UserDto userDto = new UserDto("홍길동", "aaa@naver.com", "123123", "123123", "123123");
-        given(userMapper.selectUserByEmail(any())).willReturn(null);
+        given(userMapper.selectByEmail(any())).willReturn(null);
 
         //when, then : 아무런 예외를 던지지 않음.
         assertDoesNotThrow(() -> userService.signUp(userDto));
@@ -67,7 +67,7 @@ class UserServiceTest {
         //given
         UserDto userDto = new UserDto("홍길동", "aaa@naver.com", "123123", "123123", "123123");
         User user = new User("홍길동", "aaa@naver.com", "123123", Role.USER, LocalDateTime.now());
-        BDDMockito.given(userMapper.selectUserByEmail(userDto.getEmail()))
+        BDDMockito.given(userMapper.selectByEmail(userDto.getEmail()))
                   .willReturn(user);
 
         //when
