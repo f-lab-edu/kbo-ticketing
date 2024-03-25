@@ -1,9 +1,12 @@
 package com.kboticketing.kboticketing.dto;
 
+import com.kboticketing.kboticketing.domain.User;
+import com.kboticketing.kboticketing.utils.PasswordUtils;
+import com.kboticketing.kboticketing.utils.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-
+import java.time.LocalDateTime;
 import lombok.Getter;
 
 
@@ -29,11 +32,16 @@ public final class UserDto {
 
     public UserDto(String name, String email, String code, String password,
         String confirmedPassword) {
-
         this.name = name;
         this.email = email;
         this.code = code;
         this.password = password;
         this.confirmedPassword = confirmedPassword;
     }
+
+    public User toUser() {
+        String encryptedPassword = PasswordUtils.encryptPassword(password);
+        return new User(name, email, encryptedPassword, Role.USER, LocalDateTime.now());
+    }
+
 }

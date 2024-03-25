@@ -31,24 +31,13 @@ public class UserService {
             throw new CustomException(PASSWORD_MISMATCH);
         }
 
-        User registeredUser = userMapper.selectUserByEmail(userDto.getEmail());
+        User registeredUser = userMapper.selectByEmail(userDto.getEmail());
         if (registeredUser != null) {
             throw new CustomException(EMAIL_ALREADY_EXISTS);
         }
 
-        User user = toDomain(userDto);
-        userMapper.insertUser(user);
-    }
-
-    public User toDomain(UserDto userDto) {
-        String encodedPassword = encryptPassword(userDto.getPassword());
-        LocalDateTime now = LocalDateTime.now();
-        return new User(userDto.getName(), userDto.getEmail(), encodedPassword, Role.USER, now);
-    }
-
-    public String encryptPassword(String password) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        return passwordEncoder.encode(password);
+        User user = userDto.toUser();
+        userMapper.insert(user);
     }
 }
 
