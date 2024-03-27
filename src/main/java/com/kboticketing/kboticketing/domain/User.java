@@ -1,7 +1,10 @@
 package com.kboticketing.kboticketing.domain;
 
+import com.kboticketing.kboticketing.dto.UserDto;
 import com.kboticketing.kboticketing.utils.enums.Role;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
@@ -11,20 +14,13 @@ import java.time.LocalDateTime;
  */
 @Getter
 @ToString
+@RequiredArgsConstructor
 public class User {
 
     private long userId;
-    private String name;
+    private final String name;
     private final String email;
     private final String password;
     private final Role role;
     private final LocalDateTime createdAt;
-
-    public User(String name, String email, String password, Role role, LocalDateTime createdAt) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.createdAt = createdAt;
-    }
 }

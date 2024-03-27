@@ -1,5 +1,6 @@
 package com.kboticketing.kboticketing.utils.exception;
 
+import com.kboticketing.kboticketing.utils.DateTimeUtils;
 import com.kboticketing.kboticketing.utils.response.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -43,13 +44,10 @@ public class GlobalExceptionHandler {
         FieldError firstError = bindingResult.getFieldError();
         String defaultMessage = firstError.getDefaultMessage();
 
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).
                              body(ErrorResponse.builder()
                                                .message(defaultMessage)
-                                               .timestamp(now.format(formatter))
+                                               .timestamp(DateTimeUtils.getCurrentTime())
                                                .build());
     }
 }
