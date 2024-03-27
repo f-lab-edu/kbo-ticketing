@@ -1,5 +1,6 @@
 package com.kboticketing.kboticketing.controller;
 
+import com.kboticketing.kboticketing.dto.EmailRequestDto;
 import com.kboticketing.kboticketing.dto.UserDto;
 import com.kboticketing.kboticketing.service.UserService;
 import jakarta.validation.Valid;
@@ -20,6 +21,11 @@ public class UserController {
     @PostMapping("users")
     public void signUp(@RequestBody @Valid UserDto userDto) {
         userService.signUp(userDto);
+    }
+
+    @PostMapping("verification-code")
+    public void sendVerificationCode(@RequestBody @Valid EmailRequestDto emailRequestDto) {
+        userService.sendVerificationCode(emailRequestDto);
     }
 }
 

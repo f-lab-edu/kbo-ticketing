@@ -1,6 +1,7 @@
 package com.kboticketing.kboticketing.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kboticketing.kboticketing.dto.EmailRequestDto;
 import com.kboticketing.kboticketing.dto.UserDto;
 import com.kboticketing.kboticketing.service.UserService;
 import com.kboticketing.kboticketing.utils.exception.CustomException;
@@ -33,7 +34,7 @@ public class UserControllerTest {
     UserService userService;
 
     @Test
-    @DisplayName("[ERROR] 회원가입 비밀번호 일치 테스트")
+    @DisplayName("[FAIL] 회원가입 비밀번호 일치 테스트")
     void signUpPasswordMatchTest() throws Exception {
 
         //given
@@ -52,7 +53,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @DisplayName("[ERROR] 회원가입 비밀번호 유효성 검사 테스트")
+    @DisplayName("[FAIL] 회원가입 비밀번호 유효성 검사 테스트")
     void signUpDTOValidTest() throws Exception {
 
         //given
@@ -79,6 +80,49 @@ public class UserControllerTest {
                    .content(json)
                    .contentType(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk());
+    }
 
+    @Test
+    @DisplayName("[SUCCESS] 이메일 인증 성공 테스트")
+    void sendVerificationTest() throws Exception {
+
+        //given
+        EmailRequestDto emailRequestDto = new EmailRequestDto("waithjno@gmail.com");
+        String json = new ObjectMapper().writeValueAsString(emailRequestDto);
+
+        //when,then
+        mockMvc.perform(post("/verification-code")
+                   .content(json)
+                   .contentType(MediaType.APPLICATION_JSON))
+               .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("[FAIL] 이메일 입력 테스트")
+    void sendVerificationEmailInputTest() throws Exception {
+        //given
+        EmailRequestDto emailRequestDto = new EmailRequestDto("");
+        String json = new ObjectMapper().writeValueAsString(emailRequestDto);
+
+        //when, then
+        mockMvc.perform(post("/verification-code")
+                   .content(json)
+                   .contentType(MediaType.APPLICATION_JSON))
+               .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("[FAIL] 이메일 유효성 검증 태스트")
+    void sendVerificationEmailValidTest() throws Exception {
+
+        //given
+        EmailRequestDto emailRequestDto = new EmailRequestDto("aaa");
+        String json = new ObjectMapper().writeValueAsString(emailRequestDto);
+
+        //when, then
+        mockMvc.perform(post("/verification-code")
+                   .content(json)
+                   .contentType(MediaType.APPLICATION_JSON))
+               .andExpect(status().isBadRequest());
     }
 }
