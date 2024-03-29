@@ -10,6 +10,7 @@ import com.kboticketing.kboticketing.dao.UserMapper;
 import com.kboticketing.kboticketing.domain.User;
 import com.kboticketing.kboticketing.dto.EmailRequestDto;
 import com.kboticketing.kboticketing.dto.UserDto;
+import com.kboticketing.kboticketing.dto.VerificationCodeDto;
 import com.kboticketing.kboticketing.utils.EmailUtils;
 import com.kboticketing.kboticketing.utils.enums.Role;
 import com.kboticketing.kboticketing.utils.exception.CustomException;
@@ -18,7 +19,6 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -49,6 +49,7 @@ class UserServiceTest {
         // given
         UserDto userDto = new UserDto("홍길동", "aaa@naver.com", "123123", "123123", "123123");
         given(userMapper.selectByEmail(any())).willReturn(null);
+        given(redisTemplate.hasKey(anyString())).willReturn(true);
 
         //when, then : 아무런 예외를 던지지 않음.
         assertDoesNotThrow(() -> userService.signUp(userDto));
@@ -60,6 +61,7 @@ class UserServiceTest {
 
         //given
         UserDto userDto = new UserDto("홍길동", "aaa@naver.com", "123123", "123123", "000000");
+        given(redisTemplate.hasKey(anyString())).willReturn(true);
 
         // when
         CustomException customException = assertThrows(CustomException.class, () -> {
@@ -77,8 +79,8 @@ class UserServiceTest {
         //given
         UserDto userDto = new UserDto("홍길동", "aaa@naver.com", "123123", "123123", "123123");
         User user = new User("홍길동", "aaa@naver.com", "123123", Role.USER, LocalDateTime.now());
-        BDDMockito.given(userMapper.selectByEmail(userDto.getEmail()))
-                  .willReturn(user);
+        given(userMapper.selectByEmail(userDto.getEmail())).willReturn(user);
+        given(redisTemplate.hasKey(anyString())).willReturn(true);
 
         //when
         CustomException customException = assertThrows(CustomException.class, () -> {
@@ -122,6 +124,43 @@ class UserServiceTest {
         //then
         assertThat(customException.getErrorCode()).isEqualTo(
             ErrorCode.FREQUENT_VERIFICATION_REQUEST);
+    }
+
+    @Test
+    @DisplayName("[SUCCESS] 인증번호 확인 테스트")
+    public void checkVerificationCodeTest() {
+
+        //given
+        VerificationCodeDto verificationCodeDto = new VerificationCodeDto("aaa@naver.com",
+            "123456");
+        given(redisTemplate.hasKey(anyString())).willReturn(true);
+        given(redisTemplate.opsForValue()).willReturn(valueOperations);
+        given(redisTemplate.opsForValue()
+                           .get(verificationCodeDto.getEmail())).willReturn("123456");
+
+        //when,then
+        assertDoesNotThrow(() -> userService.checkVerificationCode(verificationCodeDto));
+    }
+
+    @Test
+    @DisplayName("[FAIL] 인증번호 불일치 테스트")
+    public void checkVerificationCodeWrongTest() {
+
+        //given
+        VerificationCodeDto verificationCodeDto = new VerificationCodeDto("aaa@naver.com",
+            "123456");
+        given(redisTemplate.hasKey(anyString())).willReturn(true);
+        given(redisTemplate.opsForValue()).willReturn(valueOperations);
+        given(redisTemplate.opsForValue()
+                           .get(verificationCodeDto.getEmail())).willReturn("999999");
+
+        //when
+        CustomException customException = assertThrows(CustomException.class, () -> {
+            userService.checkVerificationCode(verificationCodeDto);
+        });
+
+        //then
+        assertThat(customException.getErrorCode()).isEqualTo(ErrorCode.WRONG_VERIFICATION_CODE);
     }
 }
 
