@@ -49,22 +49,18 @@ public class UserService {
 
     public void sendVerificationCode(EmailRequestDto emailRequestDto) {
         Boolean hasKey = redisTemplate.hasKey(emailRequestDto.getEmail());
-        if (hasKey == null) {
-            throw new CustomException(ErrorCode.FAIL_SEND_EMAIL);
-        }
-
         if (hasKey) {
-            throw new CustomException(ErrorCode.TOO_FREQUENT_VERIFICATION_REQUEST);
+            throw new CustomException(ErrorCode.FREQUENT_VERIFICATION_REQUEST);
         }
 
         String verificationCode = createRandomNumber();
         log.info("{}'s verification code  = {}", emailRequestDto.getEmail(), verificationCode);
 
-        emailUtil.sendEmail(verificationCode, emailRequestDto.getEmail());
-
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         valueOperations.set(emailRequestDto.getEmail(), verificationCode, 5,
             TimeUnit.MINUTES);
+
+        emailUtil.sendEmail(verificationCode, emailRequestDto.getEmail());
     }
 }
 
