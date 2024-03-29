@@ -2,6 +2,7 @@ package com.kboticketing.kboticketing.controller;
 
 import com.kboticketing.kboticketing.dto.EmailRequestDto;
 import com.kboticketing.kboticketing.dto.UserDto;
+import com.kboticketing.kboticketing.dto.VerificationCodeDto;
 import com.kboticketing.kboticketing.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,11 @@ public class UserController {
     @PostMapping("verification-code")
     public void sendVerificationCode(@RequestBody @Valid EmailRequestDto emailRequestDto) {
         userService.sendVerificationCode(emailRequestDto);
+    }
+
+    @PostMapping("verification-code-validation")
+    public void checkVerificationCode(@RequestBody @Valid VerificationCodeDto verificationCodeDto) {
+        userService.checkVerificationCode(verificationCodeDto);
     }
 }
 
