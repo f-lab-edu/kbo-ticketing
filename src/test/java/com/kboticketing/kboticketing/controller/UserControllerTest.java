@@ -3,6 +3,7 @@ package com.kboticketing.kboticketing.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kboticketing.kboticketing.dto.EmailRequestDto;
 import com.kboticketing.kboticketing.dto.UserDto;
+import com.kboticketing.kboticketing.dto.VerificationCodeDto;
 import com.kboticketing.kboticketing.service.UserService;
 import com.kboticketing.kboticketing.utils.exception.CustomException;
 import com.kboticketing.kboticketing.utils.exception.ErrorCode;
@@ -112,7 +113,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @DisplayName("[FAIL] 이메일 유효성 검증 태스트")
+    @DisplayName("[FAIL] 이메일 유효성 검증 테스트")
     void sendVerificationEmailValidTest() throws Exception {
 
         //given
@@ -121,6 +122,39 @@ public class UserControllerTest {
 
         //when, then
         mockMvc.perform(post("/verification-code")
+                   .content(json)
+                   .contentType(MediaType.APPLICATION_JSON))
+               .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("[SUCCESS] 인증번호 확인 테스트")
+    void checkVerificationCodeTest() throws Exception {
+
+        //given
+        VerificationCodeDto verificationCodeDto = new VerificationCodeDto("aaaa@naver.com",
+            "123123");
+        String json = new ObjectMapper().writeValueAsString(verificationCodeDto);
+
+        //when, then
+        mockMvc.perform(post("/verification-code-validation")
+                   .content(json)
+                   .contentType(MediaType.APPLICATION_JSON))
+               .andExpect(status().isOk());
+    }
+
+
+    @Test
+    @DisplayName("[FAIL] 인증번호 미입력 테스트")
+    public void checkVerificationCodeValidationTest() throws Exception {
+
+        //given
+        VerificationCodeDto verificationCodeDto = new VerificationCodeDto("aaaa@naver.com",
+            "");
+        String json = new ObjectMapper().writeValueAsString(verificationCodeDto);
+
+        //when, then
+        mockMvc.perform(post("/verification-code-validation")
                    .content(json)
                    .contentType(MediaType.APPLICATION_JSON))
                .andExpect(status().isBadRequest());
