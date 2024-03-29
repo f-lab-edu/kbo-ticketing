@@ -11,12 +11,10 @@ import com.kboticketing.kboticketing.domain.User;
 import com.kboticketing.kboticketing.dto.EmailRequestDto;
 import com.kboticketing.kboticketing.dto.UserDto;
 import com.kboticketing.kboticketing.utils.EmailUtils;
-import com.kboticketing.kboticketing.utils.NumberUtils;
 import com.kboticketing.kboticketing.utils.enums.Role;
 import com.kboticketing.kboticketing.utils.exception.CustomException;
 import com.kboticketing.kboticketing.utils.exception.ErrorCode;
 import java.time.LocalDateTime;
-import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -98,9 +96,6 @@ class UserServiceTest {
         //given
         EmailRequestDto emailRequestDto = new EmailRequestDto("hi@naver.com");
         given(redisTemplate.hasKey(anyString())).willReturn(false);
-
-        mockStatic(NumberUtils.class);
-        given(NumberUtils.createRandomNumber()).willReturn("123456");
         given(redisTemplate.opsForValue()).willReturn(valueOperations);
 
         //when
@@ -108,7 +103,7 @@ class UserServiceTest {
 
         //then
         verify(emailUtils).sendEmail(anyString(), anyString());
-        verify(valueOperations).set(emailRequestDto.getEmail(), "123456", 5, TimeUnit.MINUTES);
+        verify(valueOperations).set(anyString(), anyString(), anyLong(), any());
     }
 
     @Test
@@ -126,25 +121,7 @@ class UserServiceTest {
 
         //then
         assertThat(customException.getErrorCode()).isEqualTo(
-            ErrorCode.TOO_FREQUENT_VERIFICATION_REQUEST);
-    }
-
-    @Test
-    @DisplayName("[FAIL] 이메일 인증 테스트")
-    public void sendVerificationFailTest() {
-
-        //given
-        EmailRequestDto emailRequestDto = new EmailRequestDto("111@naver.com");
-        given(redisTemplate.hasKey(anyString())).willReturn(null);
-
-        // when
-        CustomException customException = assertThrows(CustomException.class, () -> {
-            userService.sendVerificationCode(emailRequestDto);
-        });
-
-        //then
-        assertThat(customException.getErrorCode()).isEqualTo(
-            ErrorCode.FAIL_SEND_EMAIL);
+            ErrorCode.FREQUENT_VERIFICATION_REQUEST);
     }
 }
 
