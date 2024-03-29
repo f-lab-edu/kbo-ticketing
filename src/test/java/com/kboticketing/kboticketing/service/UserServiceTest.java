@@ -8,7 +8,9 @@ import static org.mockito.BDDMockito.*;
 
 import com.kboticketing.kboticketing.dao.UserMapper;
 import com.kboticketing.kboticketing.domain.User;
+import com.kboticketing.kboticketing.dto.EmailRequestDto;
 import com.kboticketing.kboticketing.dto.UserDto;
+import com.kboticketing.kboticketing.utils.EmailUtils;
 import com.kboticketing.kboticketing.utils.enums.Role;
 import com.kboticketing.kboticketing.utils.exception.CustomException;
 import com.kboticketing.kboticketing.utils.exception.ErrorCode;
@@ -20,6 +22,8 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 
 /**
  * @author hazel
@@ -31,6 +35,12 @@ class UserServiceTest {
     UserService userService;
     @Mock
     UserMapper userMapper;
+    @Mock
+    RedisTemplate<String, String> redisTemplate;
+    @Mock
+    ValueOperations<String, String> valueOperations;
+    @Mock
+    EmailUtils emailUtils;
 
     @Test
     @DisplayName("[SUCCESS] 회원가입 성공 테스트")
@@ -45,7 +55,7 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("[ERROR] 회원가입 비밀번호 일치 테스트")
+    @DisplayName("[FAIL] 회원가입 비밀번호 일치 테스트")
     public void signUpPasswordMismatchTest() {
 
         //given
@@ -61,7 +71,7 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("[ERROR] 회원가입 이메일 존재 여부 확인 테스트")
+    @DisplayName("[FAIL] 회원가입 이메일 존재 여부 확인 테스트")
     public void signUpEmailCheckTest() {
 
         //given
@@ -77,6 +87,41 @@ class UserServiceTest {
 
         //then
         assertThat(customException.getErrorCode()).isEqualTo(ErrorCode.EMAIL_ALREADY_EXISTS);
+    }
+
+    @Test
+    @DisplayName("[SUCCESS] 이메일 인증 성공 테스트")
+    public void sendVerificationSuccessTest() {
+
+        //given
+        EmailRequestDto emailRequestDto = new EmailRequestDto("hi@naver.com");
+        given(redisTemplate.hasKey(anyString())).willReturn(false);
+        given(redisTemplate.opsForValue()).willReturn(valueOperations);
+
+        //when
+        userService.sendVerificationCode(emailRequestDto);
+
+        //then
+        verify(emailUtils).sendEmail(anyString(), anyString());
+        verify(valueOperations).set(anyString(), anyString(), anyLong(), any());
+    }
+
+    @Test
+    @DisplayName("[FAIL] 이메일 인증 잦은 요청 테스트")
+    public void sendVerificationAgainFailTest() {
+
+        //given
+        EmailRequestDto emailRequestDto = new EmailRequestDto("111@naver.com");
+        given(redisTemplate.hasKey(anyString())).willReturn(true);
+
+        // when
+        CustomException customException = assertThrows(CustomException.class, () -> {
+            userService.sendVerificationCode(emailRequestDto);
+        });
+
+        //then
+        assertThat(customException.getErrorCode()).isEqualTo(
+            ErrorCode.FREQUENT_VERIFICATION_REQUEST);
     }
 }
 
