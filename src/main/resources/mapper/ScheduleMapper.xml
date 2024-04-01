@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kboticketing.kboticketing.dao.ScheduleMapper">
+  <select id="selectSchedules" resultType="com.kboticketing.kboticketing.domain.ScheduleTeam">
+    SELECT
+    schedules.schedule_id,
+    schedules.name AS scheduleName,
+    stadium.name AS stadiumName,
+    schedules.date AS date
+    FROM schedules schedules
+    LEFT JOIN
+    stadium ON stadium.stadium_id = schedules.stadium_id
+    <where>
+      <if test="teamId != null">
+        AND home_team_id = #{teamId}
+      </if>
+      <if test="month != null">
+        AND month(date)= #{month}
+      </if>
+      <if test="day != null">
+        AND day(date)= #{day}
+      </if>
+      <if test="stadiumId != null">
+        AND schedules.stadium_id = #{stadiumId}
+      </if>
+    </where>
+  </select>
+</mapper>
