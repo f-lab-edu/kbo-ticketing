@@ -39,4 +39,16 @@
     WHERE schedule_id = #{id};
   </select>
 
+  <select id="selectSeatGrade"
+    resultType="com.kboticketing.kboticketing.domain.SeatGradeBySchedule">
+    SELECT sbs.schedule_id    AS scheduleId,
+           sbs.seat_grade_id  AS seatGradeId,
+           sg.seat_grade_name AS seatGradeName,
+           sg.price,
+           sbs.seat_remain    AS seatRemain
+    FROM seat_by_schedules sbs
+           INNER JOIN seat_grade sg ON sbs.seat_grade_id = sg.seat_grade_id
+    WHERE schedule_id = #{id}
+  </select>
+
 </mapper>
