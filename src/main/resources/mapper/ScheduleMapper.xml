@@ -27,4 +27,16 @@
       </if>
     </where>
   </select>
+
+  <select id="selectInfo" resultType="com.kboticketing.kboticketing.domain.ScheduleInfo">
+    SELECT schedule_id    AS scheduleId,
+           schedules.name AS scheduleName,
+           schedules.date AS date,
+           stadium.name AS stadiumName
+    FROM schedules schedules
+      INNER JOIN stadium
+    ON schedules.stadium_id = stadium.stadium_id
+    WHERE schedule_id = #{id};
+  </select>
+
 </mapper>
