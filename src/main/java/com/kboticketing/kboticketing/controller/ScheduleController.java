@@ -32,7 +32,7 @@ public class ScheduleController {
         return ResponseEntity.ok(CommonResponse.ok(scheduleService.getSchedule(id)));
     }
 
-    @GetMapping("/schedules/{id}/seat-grade")
+    @GetMapping("/schedules/{id}/seat-grades")
     public ResponseEntity<CommonResponse> getSeatGradeBySchedule(@PathVariable String id) {
         return ResponseEntity.ok(CommonResponse.ok(scheduleService.getSeatGradeBySchedule(id)));
     }
