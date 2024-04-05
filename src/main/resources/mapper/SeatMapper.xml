@@ -10,4 +10,10 @@
       AND seat_grade_id = #{seatGradeId};
   </select>
 
+  <select id="selectSeatGrade" resultType="com.kboticketing.kboticketing.domain.SeatGrade">
+    SELECT seat_grade_id, seat_grade_name, seat_count
+    FROM seat_grade
+    WHERE seat_grade_id = #{id};
+  </select>
+
 </mapper>

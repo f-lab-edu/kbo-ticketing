@@ -1,5 +1,6 @@
 package com.kboticketing.kboticketing.service;
 
+import com.kboticketing.kboticketing.domain.SeatGrade;
 import com.kboticketing.kboticketing.dto.ReservationSeatDto;
 import com.kboticketing.kboticketing.dao.SeatMapper;
 import com.kboticketing.kboticketing.domain.Reservation;
@@ -27,5 +28,9 @@ public class SeatService {
         }
 
         return new ReservationSeatDto(reservedSeat);
+    }
+
+    public SeatGrade getSeatGrade(String id) {
+        return seatMapper.selectSeatGrade(id);
     }
 }
