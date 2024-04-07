@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kboticketing.kboticketing.dao.SeatMapper">
+
+  <select id="selectReservations" resultType="com.kboticketing.kboticketing.domain.Reservation">
+    SELECT seat_number
+    FROM reservations
+    WHERE schedule_id = #{scheduleId}
+      AND seat_grade_id = #{seatGradeId};
+  </select>
+
+  <select id="selectSeatGrade" resultType="com.kboticketing.kboticketing.domain.SeatGrade">
+    SELECT seat_grade_id, seat_grade_name, seat_count
+    FROM seat_grade
+    WHERE seat_grade_id = #{id};
+  </select>
+
+</mapper>
