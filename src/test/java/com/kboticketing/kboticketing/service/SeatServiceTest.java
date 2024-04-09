@@ -1,6 +1,8 @@
 package com.kboticketing.kboticketing.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 
@@ -8,13 +10,19 @@ import com.kboticketing.kboticketing.dao.SeatMapper;
 import com.kboticketing.kboticketing.domain.Reservation;
 import com.kboticketing.kboticketing.domain.SeatGrade;
 import com.kboticketing.kboticketing.dto.ReservationSeatDto;
+import com.kboticketing.kboticketing.dto.SeatDto;
+import com.kboticketing.kboticketing.utils.exception.CustomException;
+import com.kboticketing.kboticketing.utils.exception.ErrorCode;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 
 /**
  * @author hazel
@@ -27,6 +35,12 @@ class SeatServiceTest {
 
     @InjectMocks
     private SeatService seatService;
+
+    @Mock
+    private RedisTemplate<String, String> redisTemplate;
+
+    @Mock
+    private ValueOperations<String, String> valueOperations;
 
     @Test
     @DisplayName("[SUCCESS] 예약 좌석 목록 조회 테스트")
@@ -63,5 +77,42 @@ class SeatServiceTest {
         //when,then
         assertThat(seatService.getSeatGrade(any())).usingRecursiveAssertion()
                                                    .isEqualTo(seatGrade);
+    }
+
+    @Test
+    @DisplayName("[FAIL] 좌석 선택 실패 테스트")
+    public void inProgressTest() {
+
+        //given - 이미 좌석이 선택되었다고 가정
+        SeatDto seatDto = new SeatDto(1, 1, 1);
+        given(redisTemplate.hasKey(any())).willReturn(true);
+
+        //when
+        CustomException customException = assertThrows(CustomException.class, () -> {
+            seatService.selectSeats(seatDto);
+        });
+
+        //then
+        assertThat(customException.getErrorCode()).isEqualTo(ErrorCode.SEAT_IN_PROGRESS);
+    }
+
+    @Test
+    @DisplayName("[SUCCESS]좌석 선택 성공 테스트")
+    public void selectSeatTest() {
+
+        //given
+        SeatDto seatDto = new SeatDto(1, 1, 1);
+        String redisKey = String.format("%d_%d_%d", seatDto.getScheduleId(),
+            seatDto.getSeatGradeId(), seatDto.getSeatId());
+
+        given(redisTemplate.opsForValue()).willReturn(valueOperations);
+        given(redisTemplate.hasKey(any())).willReturn(false);
+
+        //when
+        assertDoesNotThrow(() -> seatService.selectSeats(seatDto));
+
+        // then
+        verify(redisTemplate, times(1)).hasKey(redisKey);
+        verify(redisTemplate, times(1)).expire(eq(redisKey), eq(8L), eq(TimeUnit.MINUTES));
     }
 }
