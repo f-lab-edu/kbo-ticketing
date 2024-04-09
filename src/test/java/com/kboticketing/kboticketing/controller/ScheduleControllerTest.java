@@ -66,7 +66,7 @@ class ScheduleControllerTest {
     }
 
     @Test
-    @DisplayName("[SUCCESS] 좌석 목록 조회 테스트")
+    @DisplayName("[SUCCESS] 좌석 등급 목록 조회 테스트")
     public void getSeatGradeByScheduleTest() throws Exception {
 
         //given
@@ -75,7 +75,7 @@ class ScheduleControllerTest {
         given(scheduleService.getSeatGradeBySchedule(any())).willReturn(seatGradeList);
 
         //when,then
-        mockMvc.perform(get("/schedules/1/seat-grade"))
+        mockMvc.perform(get("/schedules/1/seat-grades"))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$.data[0].scheduleId").value(seatGradeList.get(0)
                                                                               .getScheduleId()))
