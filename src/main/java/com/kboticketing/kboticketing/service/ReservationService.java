@@ -41,8 +41,9 @@ public class ReservationService {
         }
 
         // 최대 예매 가능 횟수 확인
-        Boolean check = reservationMapper.checkReservationLimit(seatDto.getScheduleId());
-        if (!check) {
+        Boolean isReservationLimitExceeded = reservationMapper.checkReservationLimit(
+            seatDto.getScheduleId());
+        if (!isReservationLimitExceeded) {
             throw new CustomException(ErrorCode.MAXIMUM_RESERVATION_EXCEED);
         }
 
