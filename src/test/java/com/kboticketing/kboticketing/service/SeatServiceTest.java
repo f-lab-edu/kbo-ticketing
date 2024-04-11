@@ -113,6 +113,6 @@ class SeatServiceTest {
 
         // then
         verify(redisTemplate, times(1)).hasKey(redisKey);
-        verify(redisTemplate, times(1)).expire(eq(redisKey), eq(8L), eq(TimeUnit.MINUTES));
+        verify(redisTemplate, times(1)).expire(eq(redisKey), eq(7L), eq(TimeUnit.MINUTES));
     }
 }

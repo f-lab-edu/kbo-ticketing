@@ -50,7 +50,7 @@ public class SeatService {
         } else {
             redisTemplate.opsForValue()
                          .set(redisKey, " ");
-            redisTemplate.expire(redisKey, 8, TimeUnit.MINUTES);
+            redisTemplate.expire(redisKey, 7, TimeUnit.MINUTES);
         }
     }
 }
