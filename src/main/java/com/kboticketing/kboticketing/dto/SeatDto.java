@@ -12,5 +12,5 @@ public class SeatDto {
 
     private final Integer scheduleId;
     private final Integer seatGradeId;
-    private final Integer seatId;
+    private final Integer seatNumber;
 }
