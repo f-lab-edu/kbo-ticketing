@@ -19,8 +19,9 @@ public enum ErrorCode {
     REQUEST_VERIFICATION_FIRST(HttpStatus.BAD_REQUEST, "인증을 먼저 진행해주세요."),
     WRONG_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "인증번호가 다릅니다."),
     SEAT_IN_PROGRESS(HttpStatus.BAD_REQUEST, "이미 선택된 좌석입니다."),
-    SELECT_SEAT(HttpStatus.BAD_REQUEST, "자리를 선택해주세요."),
-    MAXIMUM_SEAT_EXCEED(HttpStatus.BAD_REQUEST, "예매 가능한 수량을 초과했습니다."),
+    SELECT_SEAT_FIRST(HttpStatus.BAD_REQUEST, "좌석를 선택해주세요."),
+    NOT_MY_SEAT(HttpStatus.BAD_REQUEST, "내가 선택한 좌석이 아닙니다."),
+    MAXIMUM_SEAT_EXCEED(HttpStatus.BAD_REQUEST, "예매 가능한 좌석 수량을 초과했습니다."),
     MAXIMUM_RESERVATION_EXCEED(HttpStatus.BAD_REQUEST, "한 경기당 예매 가능한 횟수를 초과했습니다."),
     RESERVED_SEAT(HttpStatus.BAD_REQUEST, "이미 예매된 좌석입니다."),
 
