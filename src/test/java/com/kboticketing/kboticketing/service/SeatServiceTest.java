@@ -89,7 +89,7 @@ class SeatServiceTest {
 
         //when
         CustomException customException = assertThrows(CustomException.class, () -> {
-            seatService.selectSeats(seatDto);
+            seatService.selectSeats(seatDto, anyInt());
         });
 
         //then
@@ -103,13 +103,13 @@ class SeatServiceTest {
         //given
         SeatDto seatDto = new SeatDto(1, 1, 1);
         String redisKey = String.format("%d_%d_%d", seatDto.getScheduleId(),
-            seatDto.getSeatGradeId(), seatDto.getSeatId());
+            seatDto.getSeatGradeId(), seatDto.getSeatNumber());
 
         given(redisTemplate.opsForValue()).willReturn(valueOperations);
         given(redisTemplate.hasKey(any())).willReturn(false);
 
         //when
-        assertDoesNotThrow(() -> seatService.selectSeats(seatDto));
+        assertDoesNotThrow(() -> seatService.selectSeats(seatDto, anyInt()));
 
         // then
         verify(redisTemplate, times(1)).hasKey(redisKey);
