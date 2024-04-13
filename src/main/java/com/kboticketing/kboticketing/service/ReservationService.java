@@ -48,15 +48,12 @@ public class ReservationService {
         }
 
         //예매하기
-        for (int i = 0; i < seatCnt; i++) {
-            try {
-                reservationMapper.insert(ReservationDto.getSeats()
-                                                       .get(i), userId, currentTime);
-            } catch (DuplicateKeyException e) {
-                throw new CustomException(ErrorCode.RESERVED_SEAT);
-            } catch (Exception e) {
-                throw new CustomException(ErrorCode.RESERVED_PROCESS_ERROR);
-            }
+        try {
+            reservationMapper.insert(reservationDto, userId, currentTime);
+        } catch (DuplicateKeyException e) {
+            throw new CustomException(ErrorCode.RESERVED_SEAT);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.RESERVED_PROCESS_ERROR);
         }
     }
 }

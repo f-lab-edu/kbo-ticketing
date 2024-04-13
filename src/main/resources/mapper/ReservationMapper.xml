@@ -4,10 +4,20 @@
 
 <mapper namespace="com.kboticketing.kboticketing.dao.ReservationMapper">
 
-  <insert id="insert" parameterType="map">
-    INSERT INTO reservations (schedule_id, seat_grade_id, user_id, seat_number, created_at, status)
-    VALUES (#{seatDto.scheduleId}, #{seatDto.seatGradeId}, #{userId}, #{seatDto.seatId},
-            #{currentTime}, "RESERVATION")
+  <insert id="insert" parameterType="java.util.Map">
+    INSERT INTO reservations (schedule_id,seat_grade_id ,user_id, seat_number, created_at,status)
+    VALUES
+    <foreach collection="reservationDto.seats" item="item"
+      separator=",">
+      (
+      #{item.scheduleId},
+      #{item.seatGradeId},
+      #{userId},
+      #{item.seatNumber},
+      #{currentTime},
+      'RESERVATION'
+      )
+    </foreach>
   </insert>
 
   <select id="checkReservationLimit" resultType="boolean">
