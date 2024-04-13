@@ -9,6 +9,7 @@ import com.kboticketing.kboticketing.utils.exception.ErrorCode;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 /**
@@ -20,19 +21,36 @@ public class ReservationService {
 
     private final SeatMapper seatMapper;
     private final ReservationMapper reservationMapper;
+    private final RedisTemplate<String, String> redisTemplate;
 
-    public void reserveSeats(ReservationDto ReservationDto, Integer userId) {
 
+    public void reserveSeats(ReservationDto reservationDto, Integer userId) {
         LocalDateTime currentTime = LocalDateTime.now();
-        int seatCnt = ReservationDto.getSeats()
+        int seatCnt = reservationDto.getSeats()
                                     .size();
-
         if (seatCnt == 0) {
-            throw new CustomException(ErrorCode.SELECT_SEAT);
+            throw new CustomException(ErrorCode.SELECT_SEAT_FIRST);
+        }
+
+        String redisKey;
+        for (SeatDto seatDto : reservationDto.getSeats()) {
+            redisKey = String.format("%d_%d_%d", seatDto.getScheduleId(), seatDto.getSeatGradeId(),
+                seatDto.getSeatNumber());
+            String value = redisTemplate.opsForValue()
+                                        .get(redisKey);
+
+            if (value == null) {
+                throw new CustomException(ErrorCode.SELECT_SEAT_FIRST);
+            }
+
+            Integer valueUserId = Integer.valueOf(value);
+            if (!valueUserId.equals(userId)) {
+                throw new CustomException(ErrorCode.NOT_MY_SEAT);
+            }
         }
 
         //좌석등급 별 예매 가능 수량 확인
-        SeatDto seatDto = ReservationDto.getSeats()
+        SeatDto seatDto = reservationDto.getSeats()
                                         .get(0);
         Integer maxReservationNum = seatMapper.selectMaxReservationSeat(seatDto.getSeatGradeId(),
             seatDto.getSeatGradeId());
