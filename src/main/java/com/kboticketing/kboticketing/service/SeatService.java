@@ -40,16 +40,16 @@ public class SeatService {
         return seatMapper.selectSeatGrade(id);
     }
 
-    public void selectSeats(SeatDto seatDto) {
+    public void selectSeats(SeatDto seatDto, Integer userId) {
         String redisKey = String.format("%d_%d_%d", seatDto.getScheduleId(),
-            seatDto.getSeatGradeId(), seatDto.getSeatId());
+            seatDto.getSeatGradeId(), seatDto.getSeatNumber());
 
         Boolean selected = redisTemplate.hasKey(redisKey);
         if (Boolean.TRUE.equals(selected)) {
             throw new CustomException(ErrorCode.SEAT_IN_PROGRESS);
         } else {
             redisTemplate.opsForValue()
-                         .set(redisKey, " ");
+                         .set(redisKey, String.valueOf(userId));
             redisTemplate.expire(redisKey, 7, TimeUnit.MINUTES);
         }
     }

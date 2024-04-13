@@ -39,6 +39,9 @@ public class SeatController {
 
     @PostMapping("/seats")
     public void selectSeats(@RequestBody SeatDto seatDto) {
-        seatService.selectSeats(seatDto);
+
+        //todo 로그인 작업 후 추가
+        Integer userId = 1;
+        seatService.selectSeats(seatDto, userId);
     }
 }
