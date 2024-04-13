@@ -22,6 +22,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 
 /**
  * @author hazel
@@ -36,6 +38,10 @@ class ReservationServiceTest {
     SeatMapper seatMapper;
     @InjectMocks
     ReservationService reservationService;
+    @Mock
+    private RedisTemplate<String, String> redisTemplate;
+    @Mock
+    private ValueOperations<String, String> valueOperations;
 
     @Test
     @DisplayName("[SUCCESS] 예매 테스트")
@@ -49,10 +55,13 @@ class ReservationServiceTest {
         seatArr.add(seat2);
         ReservationDto reservationDto = new ReservationDto(seatArr);
 
+        given(redisTemplate.opsForValue()).willReturn(valueOperations);
+        given(redisTemplate.opsForValue()
+                           .get(any())).willReturn("1");
         given(seatMapper.selectMaxReservationSeat(anyInt(),
             anyInt())).willReturn(3);
         given(reservationMapper.checkReservationLimit(any())).willReturn(true);
-        given(reservationMapper.insert(any(SeatDto.class), anyInt(),
+        given(reservationMapper.insert(any(ReservationDto.class), anyInt(),
             any(LocalDateTime.class))).willReturn(null);
 
         //when, then
@@ -68,12 +77,11 @@ class ReservationServiceTest {
         ReservationDto reservationDto = new ReservationDto(seatArr);
 
         // when
-        CustomException customException = assertThrows(CustomException.class, () -> {
-            reservationService.reserveSeats(reservationDto, 1);
-        });
+        CustomException customException = assertThrows(CustomException.class,
+            () -> reservationService.reserveSeats(reservationDto, 1));
 
         //then
-        assertThat(customException.getErrorCode()).isEqualTo(ErrorCode.SELECT_SEAT);
+        assertThat(customException.getErrorCode()).isEqualTo(ErrorCode.SELECT_SEAT_FIRST);
     }
 
     @Test
@@ -88,13 +96,14 @@ class ReservationServiceTest {
         seatArr.add(seat2);
         ReservationDto reservationDto = new ReservationDto(seatArr);
 
-        given(seatMapper.selectMaxReservationSeat(anyInt(),
-            anyInt())).willReturn(1);
+        given(redisTemplate.opsForValue()).willReturn(valueOperations);
+        given(redisTemplate.opsForValue()
+                           .get(any())).willReturn("1");
+        given(seatMapper.selectMaxReservationSeat(anyInt(), anyInt())).willReturn(1);
 
         //when
-        CustomException customException = assertThrows(CustomException.class, () -> {
-            reservationService.reserveSeats(reservationDto, 1);
-        });
+        CustomException customException = assertThrows(CustomException.class,
+            () -> reservationService.reserveSeats(reservationDto, 1));
 
         //then
         assertThat(customException.getErrorCode()).isEqualTo(ErrorCode.MAXIMUM_SEAT_EXCEED);
@@ -112,14 +121,17 @@ class ReservationServiceTest {
         seatArr.add(seat2);
         ReservationDto reservationDto = new ReservationDto(seatArr);
 
+        given(redisTemplate.opsForValue()).willReturn(valueOperations);
+        given(redisTemplate.opsForValue()
+                           .get(any())).willReturn("1");
+        given(seatMapper.selectMaxReservationSeat(anyInt(), anyInt())).willReturn(1);
         given(seatMapper.selectMaxReservationSeat(anyInt(),
             anyInt())).willReturn(3);
         given(reservationMapper.checkReservationLimit(any())).willReturn(false);
 
         //when
-        CustomException customException = assertThrows(CustomException.class, () -> {
-            reservationService.reserveSeats(reservationDto, 1);
-        });
+        CustomException customException = assertThrows(CustomException.class,
+            () -> reservationService.reserveSeats(reservationDto, 1));
 
         //then
         assertThat(customException.getErrorCode()).isEqualTo(ErrorCode.MAXIMUM_RESERVATION_EXCEED);
@@ -127,7 +139,6 @@ class ReservationServiceTest {
 
     @Test
     @DisplayName("[FAIL] 예매 완료된 좌석 예매")
-
     public void reservedSeatTest() throws Exception {
 
         //given
@@ -138,18 +149,46 @@ class ReservationServiceTest {
         seatArr.add(seat2);
         ReservationDto reservationDto = new ReservationDto(seatArr);
 
+        given(redisTemplate.opsForValue()).willReturn(valueOperations);
+        given(redisTemplate.opsForValue()
+                           .get(any())).willReturn("1");
+        given(seatMapper.selectMaxReservationSeat(anyInt(), anyInt())).willReturn(1);
         given(seatMapper.selectMaxReservationSeat(anyInt(),
             anyInt())).willReturn(3);
         given(reservationMapper.checkReservationLimit(any())).willReturn(true);
-        given(reservationMapper.insert(any(SeatDto.class), anyInt(), any(LocalDateTime.class)))
+        given(
+            reservationMapper.insert(any(ReservationDto.class), anyInt(), any(LocalDateTime.class)))
             .willThrow(DuplicateKeyException.class);
 
         //when
-        CustomException customException = assertThrows(CustomException.class, () -> {
-            reservationService.reserveSeats(reservationDto, 1);
-        });
+        CustomException customException = assertThrows(CustomException.class,
+            () -> reservationService.reserveSeats(reservationDto, 1));
 
         //then
         assertThat(customException.getErrorCode()).isEqualTo(ErrorCode.RESERVED_SEAT);
+    }
+
+    @Test
+    @DisplayName("[FAIL] 타인 좌석 에매")
+    public void checkMySelectSeatTest() {
+
+        //given
+        ArrayList<SeatDto> seatArr = new ArrayList<>();
+        SeatDto seat1 = new SeatDto(1, 1, 1);
+        SeatDto seat2 = new SeatDto(1, 1, 2);
+        seatArr.add(seat1);
+        seatArr.add(seat2);
+        ReservationDto reservationDto = new ReservationDto(seatArr);
+
+        given(redisTemplate.opsForValue()).willReturn(valueOperations);
+        given(redisTemplate.opsForValue()
+                           .get(any())).willReturn("2");
+
+        //when
+        CustomException customException = assertThrows(CustomException.class,
+            () -> reservationService.reserveSeats(reservationDto, 1));
+
+        //then
+        assertThat(customException.getErrorCode()).isEqualTo(ErrorCode.NOT_MY_SEAT);
     }
 }
