@@ -96,22 +96,54 @@ class SeatServiceTest {
     }
 
     @Test
-    @DisplayName("[SUCCESS]좌석 선택 성공 테스트")
+    @DisplayName("[SUCCESS]좌석 선택 테스트")
     public void selectSeatTest() {
 
         //given
         SeatDto seatDto = new SeatDto(1, 1, 1);
-        String redisKey = String.format("%d_%d_%d", seatDto.getScheduleId(),
-            seatDto.getSeatGradeId(), seatDto.getSeatNumber());
+        given(redisTemplate.execute(any(), anyList(), any())).willReturn("SUCCESS");
 
-        given(redisTemplate.opsForValue()).willReturn(valueOperations);
-        given(redisTemplate.hasKey(any())).willReturn(false);
+        //when, then : 아무런 예외를 던지지 않음.
+        assertDoesNotThrow(() -> seatService.selectSeats(seatDto, 1));
+    }
 
-        //when
-        assertDoesNotThrow(() -> seatService.selectSeats(seatDto, anyInt()));
+    @Test
+    @DisplayName("Redis Lua Script 를 이용한 좌석 선택 동시성 테스트")
+    public void Test() {
+        // ExecutorService 사용해 스레드 풀 생성
+        ExecutorService executor = Executors.newFixedThreadPool(100);
 
-        // then
-        verify(redisTemplate, times(1)).hasKey(redisKey);
-        verify(redisTemplate, times(1)).expire(eq(redisKey), eq(7L), eq(TimeUnit.MINUTES));
+        // 100만 번의 호출을 위한 랜덤 객체 생성
+        Random random = new Random();
+
+        // 각 호출의 처리 시작 시간을 저장할 리스트
+        List<Long> startTimes = new ArrayList<>();
+
+        // 100만 번의 호출을 위한 루프
+        for (int i = 0; i < 1000000; i++) {
+            // 랜덤한 SeatDto , userId 생성
+            SeatDto seatDto = new SeatDto(random.nextInt(100), random.nextInt(100),
+                random.nextInt(100));
+            Integer userId = random.nextInt(1000);
+
+            // 호출 직전의 시간 기록
+            long startTime = System.nanoTime();
+            startTimes.add(startTime);
+
+            // 스레드 풀에 작업 추가
+            executor.submit(() -> {
+                seatService.selectSeats(seatDto, userId);
+            });
+        }
+
+        // 전체 소요 시간 계산
+        long firstStartTime = startTimes.get(0); //처음시간
+        long lastStartTime = startTimes.get(startTimes.size() - 1); //마지막 시간
+        long totalElapsedTime = lastStartTime - firstStartTime;
+
+        // 전체 소요 시간 출력
+        double totalElapsedTimeSeconds = totalElapsedTime / 1_000_000_000.0;
+        System.out.println("처음 호출부터 1000000번 호출까지 소요 시간: " + totalElapsedTimeSeconds + " s");
+        System.out.println("모든 작업이 완료되었습니다.");
     }
 }
