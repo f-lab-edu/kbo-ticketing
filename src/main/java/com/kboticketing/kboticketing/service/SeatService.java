@@ -8,9 +8,11 @@ import com.kboticketing.kboticketing.dto.SeatDto;
 import com.kboticketing.kboticketing.utils.exception.CustomException;
 import com.kboticketing.kboticketing.utils.exception.ErrorCode;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
+import java.util.Collections;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
 
 /**
@@ -44,13 +46,22 @@ public class SeatService {
         String redisKey = String.format("%d_%d_%d", seatDto.getScheduleId(),
             seatDto.getSeatGradeId(), seatDto.getSeatNumber());
 
-        Boolean selected = redisTemplate.hasKey(redisKey);
-        if (Boolean.TRUE.equals(selected)) {
+        String script = "local redisKey = KEYS[1]" +
+            "local userId = ARGV[1]" +
+            "if redis.call('EXISTS', redisKey) == 1 then" +
+            "    return 'SEAT_IN_PROGRESS'" +
+            "else" +
+            "    redis.call('SET', redisKey, userId)" +
+            "    redis.call('EXPIRE', redisKey, 420)" +
+            "    return 'SUCCESS'" +
+            "end";
+
+        List<String> keys = Collections.singletonList(redisKey);
+        String result = redisTemplate.execute(
+            new DefaultRedisScript<>(script, String.class), keys, String.valueOf(userId));
+
+        if ("SEAT_IN_PROGRESS".equals(result)) {
             throw new CustomException(ErrorCode.SEAT_IN_PROGRESS);
-        } else {
-            redisTemplate.opsForValue()
-                         .set(redisKey, String.valueOf(userId));
-            redisTemplate.expire(redisKey, 7, TimeUnit.MINUTES);
         }
     }
 }
