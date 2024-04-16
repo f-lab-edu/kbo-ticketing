@@ -1,9 +1,8 @@
 package com.kboticketing.kboticketing.utils;
 
-import com.kboticketing.kboticketing.utils.exception.CustomException;
-import com.kboticketing.kboticketing.utils.exception.ErrorCode;
+import com.kboticketing.kboticketing.exception.CustomException;
+import com.kboticketing.kboticketing.exception.ErrorCode;
 import jakarta.mail.internet.MimeMessage;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -16,14 +15,19 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
  * @author hazel
  */
 @Slf4j
-@RequiredArgsConstructor
 @Component
 public class EmailUtils {
 
-    @Value("${spring.mail.user}")
-    private String user;
+    private final String user;
     private final JavaMailSender javaMailSender;
     private final SpringTemplateEngine templateEngine;
+
+    public EmailUtils(@Value("${spring.mail.user}") String user, JavaMailSender javaMailSender,
+        SpringTemplateEngine springTemplateEngine) {
+        this.user = user;
+        this.javaMailSender = javaMailSender;
+        this.templateEngine = springTemplateEngine;
+    }
 
     public void sendEmail(String verificationCode, String toEmail) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
