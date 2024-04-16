@@ -1,4 +1,4 @@
-package com.kboticketing.kboticketing.utils.enums;
+package com.kboticketing.kboticketing.enums;
 
 import lombok.Getter;
 

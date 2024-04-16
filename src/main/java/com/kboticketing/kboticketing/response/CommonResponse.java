@@ -1,4 +1,4 @@
-package com.kboticketing.kboticketing.utils.response;
+package com.kboticketing.kboticketing.response;
 
 import com.kboticketing.kboticketing.utils.DateTimeUtils;
 import lombok.Getter;

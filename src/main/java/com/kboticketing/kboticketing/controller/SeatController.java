@@ -3,7 +3,7 @@ package com.kboticketing.kboticketing.controller;
 import com.kboticketing.kboticketing.domain.SeatGrade;
 import com.kboticketing.kboticketing.dto.ReservationSeatDto;
 import com.kboticketing.kboticketing.service.SeatService;
-import com.kboticketing.kboticketing.utils.response.CommonResponse;
+import com.kboticketing.kboticketing.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

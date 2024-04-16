@@ -1,10 +1,8 @@
-package com.kboticketing.kboticketing.utils.exception;
+package com.kboticketing.kboticketing.exception;
 
 import com.kboticketing.kboticketing.utils.DateTimeUtils;
-import com.kboticketing.kboticketing.utils.response.ErrorResponse;
+import com.kboticketing.kboticketing.response.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
