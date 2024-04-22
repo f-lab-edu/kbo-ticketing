@@ -3,11 +3,14 @@ package com.kboticketing.kboticketing.controller;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kboticketing.kboticketing.domain.SeatGrade;
 import com.kboticketing.kboticketing.dto.ReservationSeatDto;
+import com.kboticketing.kboticketing.dto.SeatDto;
 import com.kboticketing.kboticketing.service.SeatService;
 import java.util.ArrayList;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 /**
@@ -66,5 +70,20 @@ class SeatControllerTest {
                .andExpect(jsonPath("$.data.seatGradeId").value(1))
                .andExpect(jsonPath("$.data.seatGradeName").value("블루석 300블럭"))
                .andExpect(jsonPath("$.data.seatCount").value("300"));
+    }
+
+    @Test
+    @DisplayName("[SUCCESS] 좌석 선택 테스트")
+    public void selectSeatsTest() throws Exception {
+
+        //given
+        SeatDto seatDto = new SeatDto(1, 1, 1);
+        String json = new ObjectMapper().writeValueAsString(seatDto);
+
+        //when,then
+        mockMvc.perform(post("/seats")
+                   .content(json)
+                   .contentType(MediaType.APPLICATION_JSON))
+               .andExpect(status().isOk());
     }
 }
