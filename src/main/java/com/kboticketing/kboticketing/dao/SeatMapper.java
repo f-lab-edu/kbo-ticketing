@@ -14,4 +14,6 @@ public interface SeatMapper {
     ArrayList<Reservation> selectReservations(String scheduleId, String seatGradeId);
 
     SeatGrade selectSeatGrade(String id);
+
+    Integer selectMaxReservationSeat(Integer scheduleId, Integer seatGradeId);
 }

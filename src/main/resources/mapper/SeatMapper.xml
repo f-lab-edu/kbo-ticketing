@@ -16,4 +16,11 @@
     WHERE seat_grade_id = #{id};
   </select>
 
+  <select id="selectMaxReservationSeat" resultType="int">
+    SELECT max_reservation_cnt
+    FROM seat_by_schedules
+    WHERE seat_grade_id = #{seatGradeId}
+      AND schedule_id = #{scheduleId};
+  </select>
+
 </mapper>
