@@ -2,7 +2,7 @@ package com.kboticketing.kboticketing.controller;
 
 import com.kboticketing.kboticketing.domain.Team;
 import com.kboticketing.kboticketing.service.TeamService;
-import com.kboticketing.kboticketing.utils.response.CommonResponse;
+import com.kboticketing.kboticketing.response.CommonResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

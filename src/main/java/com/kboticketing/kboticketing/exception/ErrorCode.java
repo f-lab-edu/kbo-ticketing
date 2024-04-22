@@ -1,4 +1,4 @@
-package com.kboticketing.kboticketing.utils.exception;
+package com.kboticketing.kboticketing.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

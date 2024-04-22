@@ -6,8 +6,8 @@ import com.kboticketing.kboticketing.dto.EmailRequestDto;
 import com.kboticketing.kboticketing.dto.UserDto;
 import com.kboticketing.kboticketing.dto.VerificationCodeDto;
 import com.kboticketing.kboticketing.utils.EmailUtils;
-import com.kboticketing.kboticketing.utils.exception.CustomException;
-import com.kboticketing.kboticketing.utils.exception.ErrorCode;
+import com.kboticketing.kboticketing.exception.CustomException;
+import com.kboticketing.kboticketing.exception.ErrorCode;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +17,8 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import static com.kboticketing.kboticketing.utils.NumberUtils.createRandomNumber;
-import static com.kboticketing.kboticketing.utils.exception.ErrorCode.EMAIL_ALREADY_EXISTS;
-import static com.kboticketing.kboticketing.utils.exception.ErrorCode.PASSWORD_MISMATCH;
+import static com.kboticketing.kboticketing.exception.ErrorCode.EMAIL_ALREADY_EXISTS;
+import static com.kboticketing.kboticketing.exception.ErrorCode.PASSWORD_MISMATCH;
 
 /**
  * @author hazel

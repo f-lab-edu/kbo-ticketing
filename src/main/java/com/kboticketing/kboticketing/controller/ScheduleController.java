@@ -3,7 +3,7 @@ package com.kboticketing.kboticketing.controller;
 import com.kboticketing.kboticketing.domain.ScheduleTeam;
 import com.kboticketing.kboticketing.dto.ScheduleQueryParamDto;
 import com.kboticketing.kboticketing.service.ScheduleService;
-import com.kboticketing.kboticketing.utils.response.CommonResponse;
+import com.kboticketing.kboticketing.response.CommonResponse;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

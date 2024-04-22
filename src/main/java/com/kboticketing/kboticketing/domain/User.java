@@ -1,8 +1,6 @@
 package com.kboticketing.kboticketing.domain;
 
-import com.kboticketing.kboticketing.dto.UserDto;
-import com.kboticketing.kboticketing.utils.enums.Role;
-import lombok.Builder;
+import com.kboticketing.kboticketing.enums.Role;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;

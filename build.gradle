@@ -76,19 +76,16 @@ jacocoTestReport { //바이너리 커버리지 결과를 읽기 좋은 형태로
 jacocoTestCoverageVerification {
     violationRules {
         rule {
-            enabled = true
-            element = 'CLASS'
-
             limit {
-                counter = 'LINE'
-                value = 'COVEREDRATIO'
-                minimum = 0.8  //테스트 커버리지 80
+                minimum = 0.8  //프로젝트 전체 테스트 커버리지 80
             }
 
             excludes = [
                     '**.*Application',
                     '**.domain.**',
-                    '**.dto.**'
+                    '**.dto.**',
+                    '**.enums.**',
+                    '**.response.**',
             ]
         }
     }

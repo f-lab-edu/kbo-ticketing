@@ -2,7 +2,7 @@ package com.kboticketing.kboticketing.dto;
 
 import com.kboticketing.kboticketing.domain.User;
 import com.kboticketing.kboticketing.utils.PasswordUtils;
-import com.kboticketing.kboticketing.utils.enums.Role;
+import com.kboticketing.kboticketing.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
