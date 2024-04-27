@@ -14,7 +14,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
  * @author hazel
  */
 @Configuration
-@PropertySource("classpath:application-email.properties")
+@PropertySource("classpath:application.properties")
 @ConfigurationProperties(prefix = "spring.mail")
 @Setter
 @Getter
