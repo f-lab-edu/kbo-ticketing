@@ -2,6 +2,7 @@ package com.kboticketing.kboticketing.controller;
 
 import com.kboticketing.kboticketing.dto.ReservationDto;
 import com.kboticketing.kboticketing.service.ReservationService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,12 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReservationController {
 
     private final ReservationService reservationService;
+    private final HttpServletRequest request;
 
     @PostMapping("/reservations")
     public void reserveSeats(@RequestBody ReservationDto reservationDto) {
-
-        //todo  로그인 기능 후 추가
-        int userId = 1;
+        Integer userId = Integer.valueOf(request.getAttribute("userId")
+                                                .toString());
         reservationService.reserveSeats(reservationDto, userId);
     }
 

@@ -5,6 +5,7 @@ import com.kboticketing.kboticketing.dto.ReservationSeatDto;
 import com.kboticketing.kboticketing.dto.SeatDto;
 import com.kboticketing.kboticketing.service.SeatService;
 import com.kboticketing.kboticketing.response.CommonResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SeatController {
 
     private final SeatService seatService;
+    private final HttpServletRequest request;
 
     @GetMapping("/schedules/{scheduleId}/seat-grades/{seatGradeId}")
     public ResponseEntity<CommonResponse> getSeatsByGrade(@PathVariable String scheduleId,
@@ -40,8 +42,8 @@ public class SeatController {
     @PostMapping("/seats")
     public void selectSeats(@RequestBody SeatDto seatDto) {
 
-        //todo 로그인 작업 후 추가
-        Integer userId = 1;
+        int userId = Integer.parseInt(request.getAttribute("userId")
+                                             .toString());
         seatService.selectSeats(seatDto, userId);
     }
 }
