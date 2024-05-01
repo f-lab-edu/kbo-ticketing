@@ -5,9 +5,9 @@
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
 
-name: Java CI with Gradle
+name: Java CI/CD with Gradle
 
-# 동작 조건 설정 : main, develop 브랜치에 push 혹은 pull request가 발생할 경우 동작
+# 동작 조건 설정 : main, develop 브랜치에 push 혹은 pull request 가 발생할 경우 동작
 on:
   push:
     branches: [ "main", "develop" ]
@@ -52,3 +52,25 @@ jobs:
       # 5. Docker Hub 이미지 푸시
       - name: docker Hub push
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/kbo-ticketing
+
+  # push한 이미지를 ncp에 pull 받아서 실행시키는 과정
+  run-docker-image-on-ncp:
+    needs: build-docker-image # 위의 과정이 완료되어야 실행
+    runs-on: self-hosted
+
+    steps:
+      # 1. 최신 이미지를 pull
+      - name: docker pull
+        run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/kbo-ticketing
+
+        # 2. 기존 컨테이너 중지
+      - name: docker stop container
+        run: sudo docker stop $(sudo docker ps -q) 2>/dev/null || true
+
+        # 3. 최신 이미지를 컨테이너화하여 실행
+      - name: docker run new container
+        run: sudo docker run --name kbo-ticketing --rm -d -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/kbo-ticketing
+
+      # 4. 미사용 이미지 정리
+      - name: delete old docker image
+        run: sudo docker system prune -f
