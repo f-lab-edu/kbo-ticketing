@@ -15,7 +15,7 @@ on:
     branches: [ "main", "develop" ]
 
 jobs:
-  # Spring Boot 애플리케이션을 빌드하여 도커허브에 푸시하는 과정
+  # CI : Spring Boot 애플리케이션을 build 하여 Docker Hub 에 push하는 과정
   build-docker-image:
     runs-on: ubuntu-latest
     steps:
@@ -53,7 +53,7 @@ jobs:
       - name: docker Hub push
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/kbo-ticketing
 
-  # push한 이미지를 ncp에 pull 받아서 실행시키는 과정
+  # CD : push한 이미지를 ncp에 pull 받아서 실행시키는 과정
   run-docker-image-on-ncp:
     needs: build-docker-image # 위의 과정이 완료되어야 실행
     runs-on: self-hosted
