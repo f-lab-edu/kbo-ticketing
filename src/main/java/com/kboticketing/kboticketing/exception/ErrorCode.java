@@ -24,6 +24,7 @@ public enum ErrorCode {
     MAXIMUM_SEAT_EXCEED(HttpStatus.BAD_REQUEST, "예매 가능한 좌석 수량을 초과했습니다."),
     MAXIMUM_RESERVATION_EXCEED(HttpStatus.BAD_REQUEST, "한 경기당 예매 가능한 횟수를 초과했습니다."),
     RESERVED_SEAT(HttpStatus.BAD_REQUEST, "이미 예매된 좌석입니다."),
+    LOGIN_REQUIRED(HttpStatus.BAD_REQUEST, "로그인을 먼저 진행해주세요."),
 
     /* 500 INTERNAL_SERVER_ERROR : 서버 오류 */
     FAIL_SEND_EMAIL(HttpStatus.INTERNAL_SERVER_ERROR, "이메일 전송에 실패하였습니다."),
