@@ -36,6 +36,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    //jwt
+    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.5'
 }
 
 tasks.named('test') {
