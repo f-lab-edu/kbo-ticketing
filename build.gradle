@@ -36,6 +36,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    //jwt
+    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.5'
 }
 
 tasks.named('test') {
@@ -76,16 +78,20 @@ jacocoTestReport { //바이너리 커버리지 결과를 읽기 좋은 형태로
 jacocoTestCoverageVerification {
     violationRules {
         rule {
+            element = 'CLASS'
+            enabled = true
             limit {
                 minimum = 0.8  //프로젝트 전체 테스트 커버리지 80
             }
-
             excludes = [
-                    '**.*Application',
-                    '**.domain.**',
-                    '**.dto.**',
-                    '**.enums.**',
-                    '**.response.**',
+                    '*.*Application',
+                    '*.domain.*',
+                    '*.dto.*',
+                    '*.dao.*',
+                    '*.enums.*',
+                    '*.response.*',
+                    '*.exception.*',
+                    '*.config.*',
             ]
         }
     }

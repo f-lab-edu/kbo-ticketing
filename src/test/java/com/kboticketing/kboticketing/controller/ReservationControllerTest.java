@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 /**
@@ -24,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
  */
 @WebMvcTest(ReservationController.class)
 @ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
 class ReservationControllerTest {
 
     @Autowired
@@ -43,14 +45,16 @@ class ReservationControllerTest {
         seatArr.add(seat2);
         ReservationDto reservationDto = new ReservationDto(seatArr);
 
-        willDoNothing().given(reservationService)
-                       .reserveSeats(any(ReservationDto.class), any(Integer.class));
+        willDoNothing()
+            .given(reservationService)
+            .reserveSeats(any(ReservationDto.class), any(Integer.class));
 
         String json = new ObjectMapper().writeValueAsString(reservationDto);
 
         //when,then
         mockMvc.perform(post("/reservations")
                    .content(json)
+                   .requestAttr("userId", 1)
                    .contentType(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk());
     }

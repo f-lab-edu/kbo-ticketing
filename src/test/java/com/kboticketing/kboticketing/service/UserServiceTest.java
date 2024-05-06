@@ -9,6 +9,7 @@ import static org.mockito.BDDMockito.*;
 import com.kboticketing.kboticketing.dao.UserMapper;
 import com.kboticketing.kboticketing.domain.User;
 import com.kboticketing.kboticketing.dto.EmailRequestDto;
+import com.kboticketing.kboticketing.dto.SignInDto;
 import com.kboticketing.kboticketing.dto.UserDto;
 import com.kboticketing.kboticketing.dto.VerificationCodeDto;
 import com.kboticketing.kboticketing.utils.EmailUtils;
@@ -16,6 +17,7 @@ import com.kboticketing.kboticketing.enums.Role;
 import com.kboticketing.kboticketing.exception.CustomException;
 import com.kboticketing.kboticketing.exception.ErrorCode;
 import java.time.LocalDateTime;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,6 +43,8 @@ class UserServiceTest {
     ValueOperations<String, String> valueOperations;
     @Mock
     EmailUtils emailUtils;
+    @Mock
+    JwtService jwtService;
 
     @Test
     @DisplayName("[SUCCESS] 회원가입 성공 테스트")
@@ -161,6 +165,41 @@ class UserServiceTest {
 
         //then
         assertThat(customException.getErrorCode()).isEqualTo(ErrorCode.WRONG_VERIFICATION_CODE);
+    }
+
+    @Test
+    @DisplayName("[FAIL] 로그인 시 유저 미가입 테스트")
+    public void signInNotRegisteredTest() {
+
+        //given
+        SignInDto signInDto = new SignInDto("ggg@naver.com", "1231231");
+        given(userMapper.selectByEmail(anyString())).willReturn(null);
+
+        //when
+        CustomException customException = assertThrows(CustomException.class,
+            () -> userService.signIn(signInDto));
+
+        //then
+        Assertions.assertThat(customException.getErrorCode())
+                  .isEqualTo(ErrorCode.NOT_REGISTERED);
+    }
+
+    @Test
+    @DisplayName("[FAIL] 로그인 시 비밀번호 불일치 테스트")
+    public void signInNotPasswordMismatchTest() {
+
+        //given
+        SignInDto signInDto = new SignInDto("ggg@naver.com", "1231231");
+        User user = new User("홍길동", "ggg@naver.com", "1231231", Role.USER, LocalDateTime.now());
+        given(userMapper.selectByEmail(anyString())).willReturn(user);
+
+        //when
+        CustomException customException = assertThrows(CustomException.class,
+            () -> userService.signIn(signInDto));
+
+        //then
+        Assertions.assertThat(customException.getErrorCode())
+                  .isEqualTo(ErrorCode.WRONG_PASSWORD);
     }
 }
 

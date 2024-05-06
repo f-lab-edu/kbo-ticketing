@@ -7,9 +7,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  */
 public class PasswordUtils {
 
-    private static final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    // todo bean으로 수정
+    static BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     public static String encryptPassword(String password) {
         return bCryptPasswordEncoder.encode(password);
+    }
+
+    public static Boolean matchPassword(String rawPassword, String encodedPassword) {
+        return bCryptPasswordEncoder.matches(rawPassword, encodedPassword);
     }
 }
