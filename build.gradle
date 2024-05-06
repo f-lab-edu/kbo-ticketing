@@ -86,14 +86,14 @@ jacocoTestCoverageVerification {
                 value = 'COVEREDRATIO'
             }
             excludes = [
-//                    '*.*Application',
-//                    '*.domain.*',
-//                    '*.dto.*',
-//                    '*.dao.*',
-//                    '*.enums.*',
-//                    '*.response.*',
-//                    '*.exception.*',
-//                    '*.config.*',
+                    '*.*Application',
+                    '*.domain.*',
+                    '*.dto.*',
+                    '*.dao.*',
+                    '*.enums.*',
+                    '*.response.*',
+                    '*.exception.*',
+                    '*.config.*',
             ]
         }
     }
