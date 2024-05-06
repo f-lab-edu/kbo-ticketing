@@ -4,14 +4,13 @@
 
 <mapper namespace="com.kboticketing.kboticketing.dao.UserMapper">
   <insert id="insert" parameterType="com.kboticketing.kboticketing.domain.User">
-    INSERT INTO users (name, `email`, password, role, created_at)
+    INSERT INTO users (name, email, password, role, created_at)
     VALUES (#{name}, #{email}, #{password}, #{role}, #{createdAt})
   </insert>
 
   <select id="selectByEmail" resultType="com.kboticketing.kboticketing.domain.User">
-    SELECT name, email, password, role, created_at
+    SELECT user_id, name, email, password, role, created_at
     FROM users
     WHERE email = #{email}
   </select>
-
 </mapper>

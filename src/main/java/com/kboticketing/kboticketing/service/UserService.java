@@ -3,11 +3,13 @@ package com.kboticketing.kboticketing.service;
 import com.kboticketing.kboticketing.dao.UserMapper;
 import com.kboticketing.kboticketing.domain.User;
 import com.kboticketing.kboticketing.dto.EmailRequestDto;
+import com.kboticketing.kboticketing.dto.SignInDto;
 import com.kboticketing.kboticketing.dto.UserDto;
 import com.kboticketing.kboticketing.dto.VerificationCodeDto;
 import com.kboticketing.kboticketing.utils.EmailUtils;
 import com.kboticketing.kboticketing.exception.CustomException;
 import com.kboticketing.kboticketing.exception.ErrorCode;
+import com.kboticketing.kboticketing.utils.PasswordUtils;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final EmailUtils emailUtil;
     private final RedisTemplate<String, String> redisTemplate;
+    private final JwtService jwtService;
 
     public void signUp(UserDto userDto) {
         Boolean hasKey = redisTemplate.hasKey(userDto.getEmail());
@@ -80,6 +83,20 @@ public class UserService {
             throw new CustomException(ErrorCode.WRONG_VERIFICATION_CODE);
         }
     }
+
+    public String signIn(SignInDto signInDto) {
+
+        User user = userMapper.selectByEmail(signInDto.getEmail());
+        if (user == null) {
+            throw new CustomException(ErrorCode.NOT_REGISTERED);
+        }
+
+        Boolean matchedPassword = PasswordUtils.matchPassword(signInDto.getPassword(),
+            user.getPassword());
+        if (!matchedPassword) {
+            throw new CustomException(ErrorCode.WRONG_PASSWORD);
+        }
+
+        return jwtService.generateJwt(user.getUserId());
+    }
 }
-
-
