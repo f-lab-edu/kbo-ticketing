@@ -54,7 +54,7 @@ jobs:
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/kbo-ticketing
 
       #6. Test Coverage 결과 확인
-      - name: Add coverage to P
+      - name: Add coverage to PR
         id: jacoco
         uses: madrapps/jacoco-report@v1.6
         with:
