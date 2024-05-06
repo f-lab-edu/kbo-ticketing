@@ -82,16 +82,18 @@ jacocoTestCoverageVerification {
             enabled = true
             limit {
                 minimum = 0.8  //프로젝트 전체 테스트 커버리지 80
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
             }
             excludes = [
-                    '*.*Application',
-                    '*.domain.*',
-                    '*.dto.*',
-                    '*.dao.*',
-                    '*.enums.*',
-                    '*.response.*',
-                    '*.exception.*',
-                    '*.config.*',
+//                    '*.*Application',
+//                    '*.domain.*',
+//                    '*.dto.*',
+//                    '*.dao.*',
+//                    '*.enums.*',
+//                    '*.response.*',
+//                    '*.exception.*',
+//                    '*.config.*',
             ]
         }
     }
