@@ -52,7 +52,7 @@ jacoco {
 jacocoTestReport { //바이너리 커버리지 결과를 읽기 좋은 형태로 저장
     dependsOn test
     reports {
-        xml.required.set(false)
+        xml.required.set(true)
         csv.required.set(false)
         html.required.set(true)
     }
