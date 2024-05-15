@@ -78,6 +78,10 @@ jobs:
       - name: docker stop container
         run: sudo docker stop $(sudo docker ps -q) 2>/dev/null || true
 
+        # 3. 5초 정지
+      - name: sleep 5s
+        run: sleep 5s
+
         # 3. 최신 이미지를 컨테이너화하여 실행 , pinpoint-agent-2.5.1를 컨테이너 내부의 /pinpoint에 마운트
       - name: docker run new container
         run: sudo docker run --name kbo-ticketing --rm -d -p 8081:8080 -v /root/pinpoint-agent-2.5.1:/pinpoint ${{ secrets.DOCKERHUB_USERNAME }}/kbo-ticketing
