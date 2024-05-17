@@ -36,6 +36,10 @@
 
 <img width="800" alt="server" src="https://github.com/f-lab-edu/kbo-ticketing/assets/59499600/ccccf836-ac45-45b2-827c-5e2dd943d353">
 
+`2차 구조도`
+
+<img width="800" alt="server2" src="https://github.com/f-lab-edu/kbo-ticketing/assets/59499600/b535e355-2253-4cfd-b371-dae2ee48ceed">
+
 ## 📌 DB ERD
 
 <img width="800" alt="erd" src="https://github.com/f-lab-edu/kbo-ticketing/assets/59499600/e5a5b8e4-30f2-4cad-8c10-dfbe90a68236">
