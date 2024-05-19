@@ -29,14 +29,9 @@
 - [유닛테스트 중 @Value가 null일때 feat. @Value의 주입 시점](https://azelhhh.tistory.com/117)
 - [nGrinder와 Pinpoint로 성능테스트 및 개선하기 (1) - 환경 구축](https://azelhhh.tistory.com/118)
 - [nGrinder와 Pinpoint로 성능테스트 및 개선하기 (2) - 병목지점 파악](https://azelhhh.tistory.com/119)
+- [nGrinder와 Pinpoint로 성능테스트 및 개선하기 (3) - Scale out](https://azelhhh.tistory.com/120)
 
 ## 📌 서버 구조도
-
-`1차 구조도`
-
-<img width="800" alt="server" src="https://github.com/f-lab-edu/kbo-ticketing/assets/59499600/ccccf836-ac45-45b2-827c-5e2dd943d353">
-
-`2차 구조도`
 
 <img width="800" alt="server2" src="https://github.com/f-lab-edu/kbo-ticketing/assets/59499600/b535e355-2253-4cfd-b371-dae2ee48ceed">
 
