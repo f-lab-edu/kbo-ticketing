@@ -29,7 +29,8 @@
 - [유닛테스트 중 @Value가 null일때 feat. @Value의 주입 시점](https://azelhhh.tistory.com/117)
 - [nGrinder와 Pinpoint로 성능테스트 및 개선하기 (1) - 환경 구축](https://azelhhh.tistory.com/118)
 - [nGrinder와 Pinpoint로 성능테스트 및 개선하기 (2) - 병목지점 파악](https://azelhhh.tistory.com/119)
-- [nGrinder와 Pinpoint로 성능테스트 및 개선하기 (3) - Scale out](https://azelhhh.tistory.com/120)
+- [nGrinder와 Pinpoint로 성능테스트 및 개선하기 (3) - Connection Pool 크기 조절](https://azelhhh.tistory.com/120)
+- [nGrinder와 Pinpoint로 성능테스트 및 개선하기 (4) - Scale out](https://azelhhh.tistory.com/122)
 
 ## 📌 서버 구조도
 
