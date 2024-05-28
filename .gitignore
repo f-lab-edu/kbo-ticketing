@@ -1,9 +1,4 @@
-# mysql config
-application-mysql.properties
-# redis
-application-redis.properties
-#email-info
-application-email.properties
+application.properties
 
 # Compiled class file
 *.class
