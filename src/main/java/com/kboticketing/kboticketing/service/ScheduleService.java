@@ -24,6 +24,7 @@ public class ScheduleService {
         return scheduleMapper.selectSchedules(scheduleQueryParamDto);
     }
 
+    @Cacheable(value = "schedules/", key = "#id")
     public ScheduleInfo getSchedule(String id) {
         return scheduleMapper.selectInfo(id);
     }
