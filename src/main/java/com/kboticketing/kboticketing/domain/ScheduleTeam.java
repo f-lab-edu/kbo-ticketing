@@ -1,12 +1,12 @@
 package com.kboticketing.kboticketing.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 /**
  * @author hazel
  */
-@RequiredArgsConstructor
 @Getter
 public class ScheduleTeam {
 
@@ -14,4 +14,14 @@ public class ScheduleTeam {
     private final String scheduleName;
     private final String stadiumName;
     private final String date;
+
+    @JsonCreator
+    public ScheduleTeam(@JsonProperty("scheduleId") Integer scheduleId,
+        @JsonProperty("scheduleName") String scheduleName,
+        @JsonProperty("stadiumName") String stadiumName, @JsonProperty("date") String date) {
+        this.scheduleId = scheduleId;
+        this.scheduleName = scheduleName;
+        this.stadiumName = stadiumName;
+        this.date = date;
+    }
 }
