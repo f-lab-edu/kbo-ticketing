@@ -38,6 +38,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     //jwt
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.5'
+    // spring-boot-starter-cache
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
 }
 
 tasks.named('test') {

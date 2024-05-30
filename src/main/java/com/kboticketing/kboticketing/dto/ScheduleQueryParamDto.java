@@ -1,12 +1,16 @@
 package com.kboticketing.kboticketing.dto;
 
 import java.time.LocalDateTime;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * @author hazel
  */
 @Getter
+@EqualsAndHashCode
+@ToString
 public class ScheduleQueryParamDto {
 
     private final Integer teamId;

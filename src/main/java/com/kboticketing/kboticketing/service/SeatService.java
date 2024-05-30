@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,7 @@ public class SeatService {
         return new ReservationSeatDto(reservedSeat);
     }
 
+    @Cacheable(value = "seat-grades/", key = "#id")
     public SeatGrade getSeatGrade(String id) {
         return seatMapper.selectSeatGrade(id);
     }
