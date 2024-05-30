@@ -31,6 +31,7 @@
 - [nGrinder와 Pinpoint로 성능테스트 및 개선하기 (2) - 병목지점 파악](https://azelhhh.tistory.com/119)
 - [nGrinder와 Pinpoint로 성능테스트 및 개선하기 (3) - Connection Pool 크기 조절](https://azelhhh.tistory.com/120)
 - [nGrinder와 Pinpoint로 성능테스트 및 개선하기 (4) - Scale out](https://azelhhh.tistory.com/122)
+- [nGrinder와 Pinpoint로 성능테스트 및 개선하기 (5) - 캐싱](https://azelhhh.tistory.com/124)
 
 ## 📌 서버 구조도
 
