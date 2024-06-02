@@ -6,7 +6,6 @@
 
 `KBO 야구 예매 사이트(KBO-Ticketing)`입니다. 백엔드 개발에 집중하기 위해
 프론트엔드는 [KBO-Ticketing 프로토타입](https://ovenapp.io/view/LGQwJohSa02Ln3DJ18z8umKmDUtWxCww/) 을 활용하였습니다.
-프로젝트 상세 내용은 [Wiki](https://github.com/f-lab-edu/kbo-ticketing/wiki) 에서 확인할 수 있습니다.
 
 ## 📌 프로젝트 목표
 
