@@ -1,4 +1,4 @@
-package com.kboticketing.kboticketing.utils;
+package com.kboticketing.kboticketing.common.util;
 
 import com.kboticketing.kboticketing.exception.CustomException;
 import com.kboticketing.kboticketing.exception.ErrorCode;

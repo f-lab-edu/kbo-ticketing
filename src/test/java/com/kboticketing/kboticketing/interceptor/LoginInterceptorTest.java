@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.kboticketing.kboticketing.config.interceptor.LoginInterceptor;
 import com.kboticketing.kboticketing.exception.CustomException;
 import com.kboticketing.kboticketing.exception.ErrorCode;
 import com.kboticketing.kboticketing.service.JwtService;

@@ -2,6 +2,7 @@ package com.kboticketing.kboticketing.utils;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import com.kboticketing.kboticketing.common.util.DateTimeUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

@@ -4,7 +4,7 @@ import com.kboticketing.kboticketing.domain.SeatGrade;
 import com.kboticketing.kboticketing.dto.ReservationSeatDto;
 import com.kboticketing.kboticketing.dto.SeatDto;
 import com.kboticketing.kboticketing.service.SeatService;
-import com.kboticketing.kboticketing.response.CommonResponse;
+import com.kboticketing.kboticketing.common.response.CommonResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

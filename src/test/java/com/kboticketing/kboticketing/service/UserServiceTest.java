@@ -12,7 +12,7 @@ import com.kboticketing.kboticketing.dto.EmailRequestDto;
 import com.kboticketing.kboticketing.dto.SignInDto;
 import com.kboticketing.kboticketing.dto.UserDto;
 import com.kboticketing.kboticketing.dto.VerificationCodeDto;
-import com.kboticketing.kboticketing.utils.EmailUtils;
+import com.kboticketing.kboticketing.common.util.EmailUtils;
 import com.kboticketing.kboticketing.enums.Role;
 import com.kboticketing.kboticketing.exception.CustomException;
 import com.kboticketing.kboticketing.exception.ErrorCode;

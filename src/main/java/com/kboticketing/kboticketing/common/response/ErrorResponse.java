@@ -1,7 +1,7 @@
-package com.kboticketing.kboticketing.response;
+package com.kboticketing.kboticketing.common.response;
 
 import com.kboticketing.kboticketing.exception.ErrorCode;
-import com.kboticketing.kboticketing.utils.DateTimeUtils;
+import com.kboticketing.kboticketing.common.util.DateTimeUtils;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.ResponseEntity;

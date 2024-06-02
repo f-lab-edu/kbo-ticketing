@@ -1,4 +1,4 @@
-package com.kboticketing.kboticketing.interceptor;
+package com.kboticketing.kboticketing.config.interceptor;
 
 import com.kboticketing.kboticketing.exception.CustomException;
 import com.kboticketing.kboticketing.exception.ErrorCode;

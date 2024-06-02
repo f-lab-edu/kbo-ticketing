@@ -1,6 +1,6 @@
 package com.kboticketing.kboticketing.config;
 
-import com.kboticketing.kboticketing.interceptor.LoginInterceptor;
+import com.kboticketing.kboticketing.config.interceptor.LoginInterceptor;
 import com.kboticketing.kboticketing.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;

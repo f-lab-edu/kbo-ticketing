@@ -1,6 +1,6 @@
-package com.kboticketing.kboticketing.response;
+package com.kboticketing.kboticketing.common.response;
 
-import com.kboticketing.kboticketing.utils.DateTimeUtils;
+import com.kboticketing.kboticketing.common.util.DateTimeUtils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

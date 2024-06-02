@@ -4,7 +4,7 @@ import com.kboticketing.kboticketing.dto.EmailRequestDto;
 import com.kboticketing.kboticketing.dto.SignInDto;
 import com.kboticketing.kboticketing.dto.UserDto;
 import com.kboticketing.kboticketing.dto.VerificationCodeDto;
-import com.kboticketing.kboticketing.response.CommonResponse;
+import com.kboticketing.kboticketing.common.response.CommonResponse;
 import com.kboticketing.kboticketing.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

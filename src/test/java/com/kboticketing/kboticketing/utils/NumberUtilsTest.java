@@ -2,6 +2,7 @@ package com.kboticketing.kboticketing.utils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.kboticketing.kboticketing.common.util.NumberUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 

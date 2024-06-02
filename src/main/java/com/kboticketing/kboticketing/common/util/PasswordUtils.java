@@ -1,4 +1,4 @@
-package com.kboticketing.kboticketing.utils;
+package com.kboticketing.kboticketing.common.util;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 

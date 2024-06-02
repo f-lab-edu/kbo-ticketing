@@ -1,7 +1,7 @@
 package com.kboticketing.kboticketing.exception;
 
-import com.kboticketing.kboticketing.utils.DateTimeUtils;
-import com.kboticketing.kboticketing.response.ErrorResponse;
+import com.kboticketing.kboticketing.common.util.DateTimeUtils;
+import com.kboticketing.kboticketing.common.response.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
