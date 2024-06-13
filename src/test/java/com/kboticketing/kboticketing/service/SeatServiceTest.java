@@ -14,10 +14,6 @@ import com.kboticketing.kboticketing.dto.SeatDto;
 import com.kboticketing.kboticketing.exception.CustomException;
 import com.kboticketing.kboticketing.exception.ErrorCode;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -105,45 +101,5 @@ class SeatServiceTest {
 
         //when, then : 아무런 예외를 던지지 않음.
         assertDoesNotThrow(() -> seatService.selectSeats(seatDto, 1));
-    }
-
-    @Test
-    @DisplayName("Redis Lua Script 를 이용한 좌석 선택 동시성 테스트")
-    public void Test() {
-        // ExecutorService 사용해 스레드 풀 생성
-        ExecutorService executor = Executors.newFixedThreadPool(100);
-
-        // 100만 번의 호출을 위한 랜덤 객체 생성
-        Random random = new Random();
-
-        // 각 호출의 처리 시작 시간을 저장할 리스트
-        List<Long> startTimes = new ArrayList<>();
-
-        // 100만 번의 호출을 위한 루프
-        for (int i = 0; i < 1000000; i++) {
-            // 랜덤한 SeatDto , userId 생성
-            SeatDto seatDto = new SeatDto(random.nextInt(100), random.nextInt(100),
-                random.nextInt(100));
-            Integer userId = random.nextInt(1000);
-
-            // 호출 직전의 시간 기록
-            long startTime = System.nanoTime();
-            startTimes.add(startTime);
-
-            // 스레드 풀에 작업 추가
-            executor.submit(() -> {
-                seatService.selectSeats(seatDto, userId);
-            });
-        }
-
-        // 전체 소요 시간 계산
-        long firstStartTime = startTimes.get(0); //처음시간
-        long lastStartTime = startTimes.get(startTimes.size() - 1); //마지막 시간
-        long totalElapsedTime = lastStartTime - firstStartTime;
-
-        // 전체 소요 시간 출력
-        double totalElapsedTimeSeconds = totalElapsedTime / 1_000_000_000.0;
-        System.out.println("처음 호출부터 1000000번 호출까지 소요 시간: " + totalElapsedTimeSeconds + " s");
-        System.out.println("모든 작업이 완료되었습니다.");
     }
 }
