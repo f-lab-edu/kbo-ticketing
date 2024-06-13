@@ -23,7 +23,7 @@
 
 ## 📌 기술적 issue 해결 과정
 
-- [Redis Lua Script vs Java synchronized: 동시성 테스트를 통한 성능 비교](https://azelhhh.tistory.com/115)
+- [Redis Lua Script 와 synchronized 간의 성능 비교 테스트](https://azelhhh.tistory.com/115)
 - [Redis Lua Script 실제로 Atomic할까?](https://azelhhh.tistory.com/116)
 - [유닛테스트 중 @Value가 null일때 feat. @Value의 주입 시점](https://azelhhh.tistory.com/117)
 - [nGrinder와 Pinpoint로 성능테스트 및 개선하기 (1) - 환경 구축](https://azelhhh.tistory.com/118)
