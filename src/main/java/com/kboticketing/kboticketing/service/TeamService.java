@@ -1,7 +1,7 @@
 package com.kboticketing.kboticketing.service;
 
-import com.kboticketing.kboticketing.dao.TeamMapper;
 import com.kboticketing.kboticketing.domain.Team;
+import com.kboticketing.kboticketing.repository.TeamRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -14,10 +14,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TeamService {
 
-    private final TeamMapper teamMapper;
+    private final TeamRepository teamRepository;
 
     @Cacheable(value = "teams/")
     public List<Team> getTeams() {
-        return teamMapper.selectTeams();
+        return teamRepository.findAll();
     }
 }

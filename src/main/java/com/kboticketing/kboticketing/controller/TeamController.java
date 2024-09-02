@@ -18,9 +18,8 @@ public class TeamController {
 
     private final TeamService teamService;
 
-    @GetMapping("teams")
+    @GetMapping("/teams")
     public ResponseEntity<CommonResponse> getTeams() {
-        List<Team> teams = teamService.getTeams();
-        return ResponseEntity.ok(CommonResponse.ok(teams));
+        return ResponseEntity.ok(CommonResponse.ok(teamService.getTeams()));
     }
 }
