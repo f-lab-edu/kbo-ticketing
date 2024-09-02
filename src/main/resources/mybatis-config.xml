@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--mybatis 설정파일 -->
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- 설정 옵션 추가-->
+    <mappers>
+        <!--MyBatis 매퍼파일 등록 그리고 해당 매퍼파일에는 쿼리를 정의. -->
+        <mapper resource="UserMapper.xml"/>
+    </mappers>
+</configuration>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kboticketing.kboticketing.dao.ReservationMapper">
+
+  <insert id="insert" parameterType="java.util.Map">
+    INSERT INTO reservations (schedule_id,seat_grade_id ,user_id, seat_number, created_at,status)
+    VALUES
+    <foreach collection="reservationDto.seats" item="item"
+      separator=",">
+      (
+      #{item.scheduleId},
+      #{item.seatGradeId},
+      #{userId},
+      #{item.seatNumber},
+      #{currentTime},
+      'RESERVATION'
+      )
+    </foreach>
+  </insert>
+
+  <select id="checkReservationLimit" resultType="boolean">
+        <![CDATA[
+    SELECT CASE
+             WHEN (SELECT COUNT(DISTINCT created_at)
+                   FROM reservations
+                   WHERE schedule_id = #{scheduleId}
+                     AND user_id = #{userId}) < (SELECT reservation_limit
+                                                 FROM schedules
+                                                 WHERE schedule_id = #{scheduleId}) THEN 'true'
+             ELSE 'false'
+             END AS result;
+    ]]>
+    </select>
+
+</mapper>

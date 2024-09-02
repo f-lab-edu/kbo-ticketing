@@ -1,37 +1,102 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.2.3'
-	id 'io.spring.dependency-management' version '1.1.4'
+    id 'java'
+    id 'org.springframework.boot' version '3.2.3'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'jacoco'
 }
 
 group = 'com.kboticketing'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '17'
+    sourceCompatibility = '17'
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.h2database:h2'
-	runtimeOnly 'com.mysql:mysql-connector-j'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.security:spring-security-crypto'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    //jwt
+    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.5'
+    // spring-boot-starter-cache
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacoco {
+    toolVersion = "0.8.11"
+}
+
+jacocoTestReport { //바이너리 커버리지 결과를 읽기 좋은 형태로 저장
+    dependsOn test
+    reports {
+        xml.required.set(true)
+        csv.required.set(false)
+        html.required.set(true)
+    }
+
+    afterEvaluate { //리포트에서 제외
+        classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, excludes: [
+                            '**/dto/**',
+                            '**/dao/**',
+                            '**/domain/**',
+                            '**/enums/**',
+                            '**/exception/**',
+                            '**/*Application*',
+                            // ...
+                    ])
+                })
+        )
+    }
+    finalizedBy jacocoTestCoverageVerification
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            element = 'CLASS'
+            enabled = true
+            limit {
+                minimum = 0.8  //프로젝트 전체 테스트 커버리지 80
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+            }
+            excludes = [
+                    '*.*Application',
+                    '*.domain.*',
+                    '*.dto.*',
+                    '*.dao.*',
+                    '*.enums.*',
+                    '*.response.*',
+                    '*.exception.*',
+                    '*.config.*',
+            ]
+        }
+    }
 }

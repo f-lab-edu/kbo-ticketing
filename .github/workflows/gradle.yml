@@ -1,0 +1,91 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: Java CI/CD with Gradle
+
+# 동작 조건 설정 : main, develop 브랜치에 push 혹은 pull request 가 발생할 경우 동작
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  # CI : Spring Boot 애플리케이션을 build 하여 Docker Hub 에 push하는 과정
+  build-docker-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      # 1. Java 17 세팅
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # properties 생성
+      - run: touch ./src/main/resources/application.properties
+      - run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./src/main/resources/application.properties
+      - run: cat ./src/main/resources/application.properties
+
+      # 2. Spring Boot 애플리케이션 빌드
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+        with:
+          arguments: clean build
+
+      # 3. Docker 이미지 빌드
+      - name: docker image build
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/kbo-ticketing .
+
+      # 4. DockerHub 로그인
+      - name: docker login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      # 5. Docker Hub 이미지 푸시
+      - name: docker Hub push
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/kbo-ticketing
+
+      #6. Test Coverage 결과 확인
+      - name: Add coverage to PR
+        id: jacoco
+        uses: madrapps/jacoco-report@v1.6
+        with:
+          title: 📊Test Coverage Report 📊
+          paths: ${{ github.workspace }}/build/reports/jacoco/test/jacocoTestReport.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 60 # 최소 코드 커버리지 기준
+          min-coverage-changed-files: 60 # 변경 파일에 대한 최소 코드 커버리지 기준
+
+  # CD : push한 이미지를 ncp에 pull 받아서 실행시키는 과정
+  run-docker-image-on-ncp:
+    needs: build-docker-image # 위의 과정이 완료되어야 실행
+    runs-on: self-hosted
+
+    steps:
+      # 1. 최신 이미지를 pull
+      - name: docker pull
+        run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/kbo-ticketing
+
+        # 2. 기존 컨테이너 중지
+      - name: docker stop container
+        run: sudo docker stop $(sudo docker ps -q) 2>/dev/null || true
+
+        # 3. 5초 정지
+      - name: sleep 5s
+        run: sleep 5s
+
+        # 3. 최신 이미지를 컨테이너화하여 실행 , pinpoint-agent-2.5.1를 컨테이너 내부의 /pinpoint에 마운트
+      - name: docker run new container
+        run: sudo docker run --name kbo-ticketing --rm -d -p 8081:8080 -v /root/pinpoint-agent-2.5.1:/pinpoint ${{ secrets.DOCKERHUB_USERNAME }}/kbo-ticketing
+
+      # 4. 미사용 이미지 정리
+      - name: delete old docker image
+        run: sudo docker system prune -f
